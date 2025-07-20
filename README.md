@@ -81,7 +81,7 @@ If there is no solution given the constraints that you provide, you should under
 
 ---
 
-If you have suggestions or want to contribute, please open a PR or email themochibytes@gmail.com. This app was built quickly, and this is my first app, so feedback and feature requests are especially welcome!
+If you have suggestions or want to contribute, please open a PR or email themochibytes@gmail.com. This app was built quickly, and I'm always looking for ways to improve, so feedback and feature requests are especially welcome!
 
 
 
