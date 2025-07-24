@@ -1,5 +1,5 @@
 # SmartGroups
-I built this app for my mom, who was spending hours manually creating student groups for her classes with very specific constraints. With this app, she does it in < 1 second! It was also my chance to finally prove to her that studying computer science can make me a useful member of society (at least to her)!
+I built this app for my mom, who was spending hours manually creating student groups for her classes with very specific constraints. With this app, she does it in < 1 second! It was also my chance to finally prove to her that studying computer science can make me a useful member of society (at least to her)...
 
 SmartGroups is a simple, locally-deployable web app designed to help educators and organizers quickly create student groups or meeting schedules based on time constraints and some desired group attributes. This project was inspired by the challenge of manually scheduling groups of students with specific requirements — somehow, ChatGPT is terrible at handling scheduling tasks with even a few constraints and available scheduling tools are a major pain. 
 
