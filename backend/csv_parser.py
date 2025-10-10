@@ -132,6 +132,9 @@ def parse_student_data(data, given_attributes):
     }
 
 def parse_attribute_constraints(request, given_attributes):
+    # Create a case-insensitive lookup for form keys
+    form_dict_lower = {k.lower(): v for k, v in request.form.items()}
+    
     # get the constraints for each of the student attributes
     attribute_constraints = {}
     for attr in given_attributes:
@@ -139,16 +142,17 @@ def parse_attribute_constraints(request, given_attributes):
         
         # check for min constraint for this attribute
         min_key = f'{attr}_min_per_group'
-        if min_key in request.form:
-            attr_constraints['min_per_group'] = int(request.form[min_key])
+        if min_key in form_dict_lower:
+            attr_constraints['min_per_group'] = int(form_dict_lower[min_key])
         
         # check for max constraint for this attribute  
         max_key = f'{attr}_max_per_group'
-        if max_key in request.form:
-            attr_constraints['max_per_group'] = int(request.form[max_key])
+        if max_key in form_dict_lower:
+            attr_constraints['max_per_group'] = int(form_dict_lower[max_key])
         
         # only add if constraints were specified
         if attr_constraints:
+            attribute_constraints[attr] = attr_constraints
             attribute_constraints[attr] = attr_constraints
     
     return attribute_constraints

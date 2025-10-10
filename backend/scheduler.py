@@ -14,6 +14,7 @@ class GroupScheduler:
         self.num_students = len(student_data['names'])
         self.time_slots = self._extract_time_slots()
         self.num_time_slots = len(self.time_slots)
+        self.num_time_slots = len(self.time_slots)
         
     def _extract_time_slots(self):
         return list(self.student_data['availabilities'][0].keys())
@@ -36,7 +37,8 @@ class GroupScheduler:
             return False
         
         attr_data = self.student_data['attributes'][student_idx]
-        return str(attr_data.get(attribute, 0)) == '1'
+        value = attr_data.get(attribute, 0)
+        return str(int(value)) == '1'
     
     def schedule(self):
         """
@@ -109,10 +111,13 @@ class GroupScheduler:
         for attr, constraints in attribute_constraints.items():
             for g in range(max_groups):
                 group_attr_count = sum(student_in_group[s][g] for s in range(self.num_students) 
-                               if self._get_student_attribute(s, attr))
+                            if self._get_student_attribute(s, attr))
+                
                 if 'min_per_group' in constraints:
+                    # Only enforce minimum if group is active
                     model.Add(group_attr_count >= constraints['min_per_group']).OnlyEnforceIf(group_active[g])
                 if 'max_per_group' in constraints:
+                    # Only enforce maximum if group is active
                     model.Add(group_attr_count <= constraints['max_per_group']).OnlyEnforceIf(group_active[g])
 
         # 7. combined attribute constraints! added this in case individual constraints are not expressive enough
@@ -127,8 +132,14 @@ class GroupScheduler:
                     for s in range(self.num_students)
                     if any(self._get_student_attribute(s, attr) for attr in attrs)
                 )
+                group_size = sum(student_in_group[s][g] for s in range(self.num_students))
+                
                 if min_val is not None:
-                    model.Add(group_combined_count >= min_val).OnlyEnforceIf(group_active[g])
+                    # Enforce minimum constraint: if group has any students, it must meet the minimum
+                    group_has_students = model.NewBoolVar(f'group_{g}_has_students_combined')
+                    model.Add(group_size >= 1).OnlyEnforceIf(group_has_students)
+                    model.Add(group_size == 0).OnlyEnforceIf(group_has_students.Not())
+                    model.Add(group_combined_count >= min_val).OnlyEnforceIf(group_has_students)
                 if max_val is not None:
                     model.Add(group_combined_count <= max_val).OnlyEnforceIf(group_active[g])
         
